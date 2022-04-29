@@ -12,6 +12,7 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
+@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 @dp.message_handler(text="❌Отмена", state="*")
 async def start(message: types.Message, state: FSMContext):
     await state.finish()
@@ -19,11 +20,13 @@ async def start(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, "Операция прервана", reply_markup=main_menu)
 
 
+@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await bot.send_message(message.chat.id, "Начинаем работать", reply_markup=main_menu)
 
 
+@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 @dp.message_handler(text="➕Добавить фразу")
 async def create_phrase(message: types.Message):
     if message.chat.id > 0:
@@ -31,6 +34,7 @@ async def create_phrase(message: types.Message):
         await CreatePhrase.first()
 
 
+@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 @dp.message_handler(state=CreatePhrase.phrase)
 async def create_phrase(message: types.Message, state: FSMContext):
     if message.chat.id > 0:
@@ -41,6 +45,7 @@ async def create_phrase(message: types.Message, state: FSMContext):
         await CreatePhrase.next()
 
 
+@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 @dp.message_handler(state=CreatePhrase.name)
 async def create_phrase(message: types.Message, state: FSMContext):
     if message.chat.id > 0:
