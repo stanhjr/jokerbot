@@ -4,8 +4,7 @@ __pycache__/
 *$py.class
 .idea
 # C extensions
-config
-config/
+deploy
 config.py
 *.so
 venv

@@ -19,7 +19,6 @@ async def start(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, "Операция прервана", reply_markup=main_menu)
 
 
-@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     if message.chat.id > 0:
