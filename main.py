@@ -60,7 +60,7 @@ async def create_phrase(message: types.Message, state: FSMContext):
 async def chat_group(message: types.Message):
     text_lower = message.text.lower()
     if text_lower.find("пром") >= 0:
-        await bot.send_message(message.chat.id, data_api.get_random_phrase())
+        await bot.send_message(message.chat.id, data_api.get_random_phrase(), reply_markup=types.ReplyKeyboardRemove())
 
 
 @dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
