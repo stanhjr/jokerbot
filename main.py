@@ -61,32 +61,20 @@ async def chat_group(message: types.Message):
         await bot.send_message(message.chat.id, data_api.get_random_phrase())
 
 
-@dp.message_handler()
+@dp.message_handler(filters.ChatTypeFilter(types.ChatType.PRIVATE))
 async def chat_group(message: types.Message):
     try:
-        if message.chat.id > 0:
-            list_user_telegram_id = data_api.get_all_user_telegram_id()
+        user_id = data_api.set_user(telegram_id=message.forward_from.id,
+                                    last_name=message.forward_from.last_name,
+                                    first_name=message.forward_from.first_name)
 
-        if message.chat.id > 0 and message.forward_from.id in list_user_telegram_id:
-
-            if data_api.set_phrase(message.text, message.forward_from.id):
-                await bot.send_message(message.chat.id, "Фраза успешно добавлена")
-            else:
-                await bot.send_message(message.chat.id, "Что то пошло не так, попробуйте ещё раз")
-
-        if message.chat.id > 0 and message.forward_from.id not in list_user_telegram_id:
-            result = data_api.set_user(telegram_id=message.forward_from.id,
-                                       first_name=message.forward_from.first_name,
-                                       last_name=message.forward_from.last_name)
-
-            if data_api.set_phrase(message.text, result):
-                await bot.send_message(message.chat.id, "Фраза успешно добавлена")
-            else:
-                await bot.send_message(message.chat.id, "Что то пошло не так, попробуйте ещё раз")
-
+        if data_api.set_phrase(text=message.text, user_id=user_id):
+            await bot.send_message(message.chat.id, "Фраза успешно добавлена")
+        else:
+            await bot.send_message(message.chat.id, "Что то пошло не так, попробуйте ещё раз")
 
     except AttributeError:
-        await bot.send_message(message.chat.id, "Нужно пересылать сообщения, чтобы я внёс их в базу")
+        await bot.send_message(message.chat.id, "Нужно пересылать сообщения, чтобы я внёс их в базу или воспользоваться механизмом диалога")
 
 
 if __name__ == '__main__':

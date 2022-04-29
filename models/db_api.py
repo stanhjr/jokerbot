@@ -21,6 +21,7 @@ class DataApi:
         self.session = session
 
     def set_phrase(self, text, user_id):
+
         with self.session() as s:
             phrase = Phrase()
             phrase.phrase = text
